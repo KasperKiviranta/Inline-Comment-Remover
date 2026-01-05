@@ -1,5 +1,7 @@
 # Inline Code Cleaner
 
+[**🔴 Live Website**](https://kasperkiviranta.github.io/Inline-Comment-Remover/)
+
 A lightweight, browser-based tool designed to prepare code for production by stripping inline comments and removing comment-only lines. 
 
 It keeps your code clean and reduces file size while preserving the original structure of your logic.
@@ -16,16 +18,15 @@ It keeps your code clean and reduces file size while preserving the original str
 
 ## 📋 How to Use
 
-1.  **Open:** Double-click the `index.html` file to open it in any web browser.
+1.  **Open:** Go to the [Live Website](https://kasperkiviranta.github.io/Inline-Comment-Remover/) (or clone and open `index.html`).
 2.  **Paste:** Paste your source code into the top text box.
 3.  **Configure:** Enter your comment symbol in the tiny box (e.g., `//` for JavaScript, `#` for Python).
 4.  **Run:** Click **Uncomment**.
 5.  **Export:** Click **Copy** to grab the clean code.
 
-## 💡 Example
+## 💡 Example & Logic
 
-**Settings:**
-* Symbol to remove: `//`
+Here is how the tool processes text when using `//` as the delimiter:
 
 **Input:**
 ```javascript
@@ -37,3 +38,15 @@ const minUsers = 5;
 function init() {
     start(); // Launch app
 }
+```
+
+**Output**
+```javascript
+const maxUsers = 100; 
+
+const minUsers = 5;
+
+function init() {
+    start(); 
+}
+```
