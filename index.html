@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inline Code Cleaner</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+            background-color: #f4f4f9;
+        }
+
+        h2 { text-align: center; color: #333; }
+
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .output-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        textarea {
+            width: 100%;
+            height: 200px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            box-sizing: border-box;
+            resize: vertical;
+            white-space: pre;
+        }
+
+        #outputBox {
+            background-color: #e9ecef;
+            color: #495057;
+            padding-right: 70px; 
+        }
+
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        #filterInput {
+            width: 60px;
+            padding: 8px;
+            text-align: center;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+
+        #uncommentBtn {
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        #uncommentBtn:hover { background-color: #0056b3; }
+
+        #copyBtn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 10px;
+            font-size: 12px;
+            cursor: pointer;
+            opacity: 0.9;
+        }
+        #copyBtn:hover { opacity: 1; }
+
+        label {
+            font-size: 0.9em;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Inline Comment Remover</h2>
+    <textarea id="inputBox" placeholder="Paste your code here..."></textarea>
+    <div class="controls">
+        <label for="filterInput">Symbol to remove (e.g. //):</label>
+        <input type="text" id="filterInput" placeholder="//">
+        <button id="uncommentBtn">Uncomment</button>
+    </div>
+    <div class="output-wrapper">
+        <button id="copyBtn">Copy</button>
+        <textarea id="outputBox" readonly placeholder="Cleaned text will appear here..."></textarea>
+    </div>
+</div>
+
+<script>
+    const inputBox = document.getElementById('inputBox');
+    const outputBox = document.getElementById('outputBox');
+    const filterInput = document.getElementById('filterInput');
+    const btn = document.getElementById('uncommentBtn');
+    const copyBtn = document.getElementById('copyBtn');
+
+    const savedFilter = localStorage.getItem('myInlineFilterString');
+    if (savedFilter !== null) {
+        filterInput.value = savedFilter;
+    }
+
+    btn.addEventListener('click', () => {
+        const text = inputBox.value;
+        const filterString = filterInput.value;
+
+        localStorage.setItem('myInlineFilterString', filterString);
+
+        if (!filterString) {
+            alert("Please enter the comment symbol in the tiny box.");
+            return;
+        }
+
+        const lines = text.split('\n');
+        const processedLines = [];
+
+        for (let line of lines) {
+            const index = line.indexOf(filterString);
+
+            if (index !== -1) {
+                const keptPart = line.substring(0, index);
+                if (keptPart.trim().length > 0) {
+                    processedLines.push(keptPart.trimEnd());
+                }
+            } else {
+                processedLines.push(line);
+            }
+        }
+
+        outputBox.value = processedLines.join('\n');
+    });
+    copyBtn.addEventListener('click', () => {
+        if (!outputBox.value) return;
+
+        navigator.clipboard.writeText(outputBox.value).then(() => {
+            const originalText = copyBtn.innerText;
+            copyBtn.innerText = "Copied!";
+            copyBtn.style.backgroundColor = "#218838"; 
+
+            setTimeout(() => {
+                copyBtn.innerText = originalText;
+                copyBtn.style.backgroundColor = "#28a745";
+            }, 2000);
+        }).catch(err => {
+            console.error('Failed to copy text: ', err);
+            alert("Failed to copy. Please manually select and copy.");
+        });
+    });
+</script>
+
+</body>
+</html>
