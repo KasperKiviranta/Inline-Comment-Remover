@@ -12,7 +12,7 @@ It keeps your code clean and reduces file size while preserving the original str
 * **Smart Trimming:** * Removes text *after* the specific delimiter.
     * Removes lines that contain *only* comments.
     * Preserves code located before a comment on the same line.
-    * Preserves original empty lines to maintain code formatting.
+* **Empty Line Removal:** Includes a dedicated button to strip all whitespace-only lines from your code.
 * **Privacy First:** Runs entirely in your browser. No code is sent to any server.
 * **User Convenience:** Remembers your last used delimiter (via Local Storage) and includes a one-click "Copy to Clipboard" button.
 
