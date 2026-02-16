@@ -132,57 +132,40 @@
     const removeEmptyBtn = document.getElementById('removeEmptyBtn');
     const copyBtn = document.getElementById('copyBtn');
 
-    // Load saved filter
     const savedFilter = localStorage.getItem('myInlineFilterString');
     if (savedFilter !== null) {
         filterInput.value = savedFilter;
     }
 
-    // 1. Uncomment Logic
     uncommentBtn.addEventListener('click', () => {
-        const text = inputBox.value;
-        const filterString = filterInput.value;
+    const text = inputBox.value;
+    const filterString = filterInput.value || "//";
 
-        localStorage.setItem('myInlineFilterString', filterString);
+    localStorage.setItem('myInlineFilterString', filterString);
 
-        if (!filterString) {
-            alert("Please enter the comment symbol in the tiny box.");
-            return;
+    const lines = text.split('\n');
+    const processedLines = [];
+
+    for (let line of lines) {
+        if (line.trimStart().startsWith(filterString)) {
+            continue; 
+        } else {
+            processedLines.push(line);
         }
+    }
+    
+    outputBox.value = processedLines.join('\n');
+});
 
-        const lines = text.split('\n');
-        const processedLines = [];
-
-        for (let line of lines) {
-            const index = line.indexOf(filterString);
-
-            if (index !== -1) {
-                // Cut line at the symbol
-                const keptPart = line.substring(0, index);
-                // Only keep if there is code left
-                if (keptPart.trim().length > 0) {
-                    processedLines.push(keptPart.trimEnd());
-                }
-            } else {
-                // Keep original line
-                processedLines.push(line);
-            }
-        }
-        outputBox.value = processedLines.join('\n');
-    });
-
-    // 2. Remove Empty Lines Logic
     removeEmptyBtn.addEventListener('click', () => {
         const text = inputBox.value;
         const lines = text.split('\n');
         
-        // Filter: Keep line ONLY if trimmed length > 0
         const nonEmptyLines = lines.filter(line => line.trim().length > 0);
         
         outputBox.value = nonEmptyLines.join('\n');
     });
 
-    // 3. Copy Button Logic
     copyBtn.addEventListener('click', () => {
         if (!outputBox.value) return;
 
